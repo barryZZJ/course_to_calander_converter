@@ -11,7 +11,7 @@
 
 [使用python生成ical日历文件——将课程表导入到手机日历](https://www.cnblogs.com/zhongbr/p/python_calender.html)
 
-用于导入ics文件的app：[iCal Import/Export](./iCal Import Export.apk)
+用于导入ics文件的app：[iCal Import/Export](iCal Import Export.apk)
 
 
 
