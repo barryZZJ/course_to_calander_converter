@@ -34,7 +34,11 @@
    5. 调用 mycal 的 save_as_ics_file(*filename*) 成员函数，生成ics文件，发送到手机。（我生成的文件在output文件夹里，可以用来参考）
 
 3. 导入到手机日历。
-
+   方法一：（安卓，ios通用）
+   1. 把ics文件用邮件的方式发给自己，然后用手机或ipad打开，即可导入。
+   
+   方法二：（仅限安卓）
+   1. 安装“参考资料”中的app
    1. （可选）可以先点 EDIT CALENDARS 新建一个专门存课表的日历
    2. 选IMPORT，进去后Import source选Internal/External memory，文件路径就是刚刚生成的ics文件，然后一路下一步就行了
 
