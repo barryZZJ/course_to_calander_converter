@@ -1,37 +1,21 @@
 # course_to_calander_converter
 根据课程表生成日历文件.ics，用于导入手机日历。
 
-默认课程表字符串格式来自于重庆大学。
-
-（以前wecqu提供的一键导入日历的API接口好像挂了，我看手动导入也不麻烦，于是就手写了一个）
-
-
-
-## 参考资料
-
-[使用python生成ical日历文件——将课程表导入到手机日历](https://www.cnblogs.com/zhongbr/p/python_calender.html)
-
-用于导入ics文件的app：[iCal Import/Export](https://github.com/barryZZJ/course_to_calander_converter/raw/master/iCal%20Import%20Export.apk)（已经上传到库里了，链接点不开的话就把整个库下载下来）
+适用于新版选课网 my.cqu.edu.cn/enroll/
 
 
 
 ## 使用说明
 
-1. 手写csv文件。
+1. 获取课表信息json文件。
 
-   参考courseinfo_template.csv 的格式（数据来自抢课网 “教学安排——查看个人课表”），注意分隔符是空格。
+   在[选课管理页面](my.cqu.edu.cn/enroll/Home)点击查看课表，用抓包工具获得选课信息的json文件，命名为`template.json`放入`new/`中。
 
-2. 生成ics文件（可直接参考courseadder.py中的main部分）。
+2. 生成ics日历文件，修改courseadder.py中的入口main函数：
 
-   1. 调用 normalize_file(*filepath*)（converter.py ），其中filepath为csv文件的路径。得到返回值contents。
+   1. line47，修改调用make_courses的第二个参数为本学期第一天
 
-   2. 调用 make_courses(*contents*, first_day_of_semester: *datetime*)（converter.py ），得到返回值课程对象数组courses。
-
-      （其中 first_day_of_semester 是本学期的第一天00:00对应的 datetime.datetime 对象）
-
-   3. 生成 MyCalendar 对象 mycal（mycalendar.py) 
-   4. 遍历courses，依次调用 add_course(cal: *MyCalendar*, course: *Course*)（courseadder.py），把每个课程的具体信息（课程名称，上课时间，下课时间等）添加到日历对象中。
-   5. 调用 mycal 的 save_as_ics_file(*filename*) 成员函数，生成ics文件，发送到手机。（我生成的文件在output文件夹里，可以用来参考）
+   3. 可选：line52，修改生成ics的默认文件名
 
 3. 导入到手机日历。
 
@@ -40,7 +24,7 @@
    
    
    方法二：（仅限安卓）
-   1. 安装“参考资料”中的app
+   1. 安装用于导入ics文件的app：[iCal Import/Export.apk](https://github.com/barryZZJ/course_to_calander_converter/raw/master/iCal%20Import%20Export.apk)（已经上传到repo里了，链接点不开的话就把整个库下载下来）
    1. （可选）可以先点 EDIT CALENDARS 新建一个专门存课表的日历
    2. 选IMPORT，进去后Import source选Internal/External memory，文件路径就是刚刚生成的ics文件，然后一路下一步就行了
 
@@ -54,6 +38,17 @@ P.P.S 日历头(MyCalendar.__calendar_header) 那一堆东西可以导出自己�
 
 ## 废话
 
-第一版，我用着没啥大问题，如果有bug建议自己改改代码。不过有问题、意见建议啥的还是可以在Issues里提的哈。
+第一版：我用着没啥大问题，如果有bug建议自己改改代码。不过有问题、意见建议啥的还是可以在Issues里提的哈。
+
+第二版：适配了新版选课网，可以直接获取json文件处理起来更方便了。
+
+TODO 把抓包那个过程变成自动化的登录统一认证平台
+TODO 把要修改的代码变成参数传入
 
 没啥大用的小程序我就不求star了~
+
+
+
+## 参考资料
+
+[使用python生成ical日历文件——将课程表导入到手机日历](https://www.cnblogs.com/zhongbr/p/python_calender.html)

@@ -4,6 +4,7 @@ from timetable import TimeTable
 from course import Course
 import numpy 
 import regex
+import json
 
 char2int = {
     "一": 1,
@@ -94,8 +95,8 @@ def read_file(filepath):
 
 def normalize_file(filepath, read_only=False):
     """
-    把周次 a-b周 详细写出，并存回csv文件里
-    
+    把周次 a-b周 详存回csv文件里
+    细写出，并
     return: e.g. 
     [['操作系统', '何静媛', '1,2,3,4,7,8,9,10,11,12,13,14', '四[3-4节]', 'D1151', '1,2,3,4,6,7,8,9,10,11,12,13', '六[3-4节]', 'D1138'], 
     ['世界舞台上的中华文明', '叶泽川', '15,16', '四[10-11节]', '4,7,9,11,13', '10,11', 'D1545']]
@@ -124,3 +125,55 @@ def normalize_file(filepath, read_only=False):
             f.write("\n")
     return contents
 
+def read_file_json(filepath):
+    """
+        读入json文件，用空格为分隔符，每一行读入为一个数组
+
+        return: e.g.
+        [['操作系统', '何静媛', '1-7,8-14', '四[3-4节]', 'D1151'],
+         ['操作系统', '何静媛', '1-13', '六[3-4节]', 'D1138'],
+         ['世界舞台上的中华文明', '叶泽川', '15,16', '四[10-11节]'],
+         ['世界舞台上的中华文明', '叶泽川', '4,7,9,11,13', '四[10-11节]', 'D1545']]
+        """
+    contents = []
+    with open(filepath, 'r', encoding='utf8') as f:
+        datas = json.load(f)
+    for data in datas["data"]:
+        course = [data['courseName'], data['classTimetableInstrVOList'][0]['instructorName'], data['teachingWeekFormat'], f"{data['weekDayFormat']}[{data['periodFormat']}节]", data['roomName']]
+        if 'None' in course[3]:
+            # 跳过节数含有None的课
+            continue
+        contents.append(course)
+
+    return contents
+
+def normalize_file_json(filepath, read_only=False):
+    """
+        把周次 a-b周 展开
+        return: e.g.
+        [['操作系统', '何静媛', '1,2,3,4,7,8,9,10,11,12,13,14', '四[3-4节]', 'D1151', '1,2,3,4,6,7,8,9,10,11,12,13', '六[3-4节]', 'D1138'],
+        ['世界舞台上的中华文明', '叶泽川', '15,16', '四[10-11节]', '4,7,9,11,13', '10,11', 'D1545']]
+        """
+    contents = read_file_json(filepath)
+    if read_only:
+        return contents
+
+    for content in contents:
+        for i in range(2, len(content), 3):
+            if "-" in content[i]:
+                wks = list()
+                l = content[i].split(",")
+                for s in l:
+                    if "-" not in s:
+                        wks.append(s)
+                    else:
+                        a, b = regex.findall(r"(\d+)-(\d+)", s)[0]
+                        a, b = int(a), int(b)
+                        wks.extend(map(str, range(a, b + 1)))
+                content[i] = ",".join(wks)
+
+    # with open(filepath, "w", encoding="utf-8") as f:
+    #     for content in contents:
+    #         f.write(" ".join(content))
+    #         f.write("\n")
+    return contents

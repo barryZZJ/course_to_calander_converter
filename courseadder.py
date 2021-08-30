@@ -1,6 +1,6 @@
 from datetime import datetime, date, time, timedelta
 from mycalendar import Event, MyCalendar
-from converter import read_file, normalize_file, make_courses
+from converter import read_file, normalize_file, make_courses, normalize_file_json, read_file_json
 from course import Course
 import uuid
 
@@ -42,12 +42,12 @@ def add_event(cal: MyCalendar, DTSTART: datetime, DTEND: datetime, ORGANIZER, SU
     )
 
 if __name__ == "__main__":
-    contents = normalize_file(
-        r"D:\Software\Pycharm\Projects\生成课表\courseinfo.csv")
-    courses = make_courses(contents, datetime(2020, 8, 31))
+    path = r".\new\template.json"
+    contents = normalize_file_json(path)
+    courses = make_courses(contents, datetime(2021, 8, 30))
     mycal = MyCalendar()
     for i, course in enumerate(courses):
         print("Processing Course {}...".format(i))
         add_course(mycal, course)
-    mycal.save_as_ics_file("大三上课表")
+    mycal.save_as_ics_file("课表")
     print("Done!")
