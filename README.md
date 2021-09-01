@@ -5,24 +5,28 @@
 
 
 
-## 使用说明
+## 使用方法
 
 1. 获取课表信息json文件。
 
    在[选课管理页面](my.cqu.edu.cn/enroll/Home)点击查看课表，用抓包工具获得选课信息的json文件，命名为`template.json`放入`new/`中。
 
-2. 生成ics日历文件，修改courseadder.py中的入口main函数：
+2. 生成ics日历文件：
 
-   1. line47，修改调用make_courses的第二个参数为本学期第一天
+   `python3 main.py 本学期第一天 [-j json文件路径] [-n 输出文件名]`
 
-   3. 可选：line52，修改生成ics的默认文件名
+   本学期第一天格式为`yyyy-mm-dd`，如`2021-8-30`
+
+   `-j`和`-n`为可选参数，具体用法使用`python3 main.py -h`查看
+
+   生成文件在`output/`中
 
 3. 导入到手机日历。
 
    方法一：（安卓，ios通用）
    1. 把ics文件用邮件的方式发给自己，然后用手机或ipad打开，即可导入。
-   
-   
+
+
    方法二：（仅限安卓）
    1. 安装用于导入ics文件的app：[iCal Import/Export.apk](https://github.com/barryZZJ/course_to_calander_converter/raw/master/iCal%20Import%20Export.apk)（已经上传到repo里了，链接点不开的话就把整个库下载下来）
    1. （可选）可以先点 EDIT CALENDARS 新建一个专门存课表的日历
@@ -41,6 +45,8 @@ P.P.S 日历头(MyCalendar.__calendar_header) 那一堆东西可以导出自己�
 第一版：我用着没啥大问题，如果有bug建议自己改改代码。不过有问题、意见建议啥的还是可以在Issues里提的哈。
 
 第二版：适配了新版选课网，可以直接获取json文件处理起来更方便了。
+
+v2.1 新增入口文件
 
 TODO 把抓包那个过程变成自动化的登录统一认证平台
 TODO 把要修改的代码变成参数传入
